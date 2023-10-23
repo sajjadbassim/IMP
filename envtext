@@ -1,0 +1,18 @@
+DB_HOST=PC
+DB_USER=Sajjad
+DB_PASSWORD=SajjadDev2023
+DB_NAME=IMPTest
+PORT=1433
+JWT_EXPIRES_IN= 20h
+JWT_KEY=aslkjdlliuklloew5456456456dfsdfdskljfklsdjflksd6569+89+
+S_KEY= this@is@Key@For@DOTE_Programming&&&Team_es7
+
+
+# DB_HOST=N1NWPLSK12SQL-v01.shr.prod.ams1.secureserver.net
+# DB_USER=Sajjad
+# DB_PASSWORD=Sajjad2023
+# DB_NAME=IMPDB
+# PORT=1433
+# JWT_EXPIRES_IN= 20h
+# JWT_KEY=aslkjdlliuklloew5456456456dfsdfdskljfklsdjflksd6569+89+
+# S_KEY= this@is@Key@For@DOTE_Programming&&&Team_es7

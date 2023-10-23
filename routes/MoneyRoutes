@@ -1,0 +1,13 @@
+const express = require('express');
+const router = express.Router();
+const MoneyController = require('../Controller/MoneyController');
+const {isAuthenticatedUser} = require('../middlewares/isAuth');
+
+// GET all acounts
+router.get('/',isAuthenticatedUser, MoneyController.getAllMoney);
+
+router.get('/moneybyID',isAuthenticatedUser, MoneyController.getlMoneyById);
+router.get('/MoneyReport',isAuthenticatedUser, MoneyController.getMoneyReport);
+
+
+module.exports = router;
