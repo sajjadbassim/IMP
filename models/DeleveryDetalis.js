@@ -123,6 +123,19 @@ const DeliveryDetails = sequelize.define('Delevery_Detalis', {
   TaxiNotes: {
     type: DataTypes.STRING,
   },
+  TaxiDriverPhone: {
+    type: DataTypes.STRING,
+  },
+  PagePhone: {
+    type: DataTypes.STRING,
+  },
+  PageNotes: {
+    type: DataTypes.STRING,
+  },
+  CustName: {
+    type: DataTypes.STRING,
+  },
+
 }, 
 {
   timestamps: false, // Disable timestamps
