@@ -68,19 +68,20 @@ const getDetalisStatosAndCount = async (req, res) => {
     const type = req.user.Type;
     var  query="";
     if (type === 'موظف') {
-   
-    var query = " User_Name = N'" + fullName +"'" ;
+    // var query = "WHERE User_Name = N'" + fullName +"'" ;
+    var query = "" ;
+
     } else if (type === 'مندوب') {
-      var query = " taxiDriver = N'" + fullName +"' AND StatosPay!=N'تم التسديد' AND Statos!=N'راجع إلى العميل' and Statos!=N'راجع الى المخزن'" ;
+      var query = "WHERE taxiDriver = N'" + fullName +"' AND StatosPay!=N'تم التسديد' AND Statos!=N'راجع إلى العميل' and Statos!=N'راجع الى المخزن'" ;
     } else if (type === 'بيج') {
-      var query = " PageName = N'" + fullName +"'" ;
+      var query = "WHERE PageName = N'" + fullName +"'" ;
     }  else {
       res.send({
         success: false,
         message: "Access denied For This User .",
       });
      }
-      const [results, metadata] = await sequelize.query(`SELECT distinct(statos) , count(*) as count FROM Delevery_Detalis WHERE ${query} Group By statos`);
+      const [results, metadata] = await sequelize.query(`SELECT distinct(statos) , count(*) as count FROM Delevery_Detalis  ${query} Group By statos`);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
@@ -119,11 +120,12 @@ const geDetalisTown = async (req, res) => {
     }
     var  query="";
     if (type === 'موظف') {
-       query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"'" ;
+      //  query = "WHERE User_Name = N'" + fullName +"' AND statos like N'" + statos +"'" ;
+      var query = "" ;
     } else if (type === 'مندوب') {
-       query = " taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
+       query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
     } else if (type === 'بيج') {
-       query = " PageName = N'" + fullName +"'AND statos like N'" + statos +"'" ;
+       query = "WHERE PageName = N'" + fullName +"'AND statos like N'" + statos +"'" ;
     }    else {
         res.send({
           success: false,
@@ -131,7 +133,7 @@ const geDetalisTown = async (req, res) => {
         });
        }
 
-      const [results, metadata] = await sequelize.query(`SELECT City , count(*) as count FROM Delevery_Detalis WHERE ${query}  Group By City `);
+      const [results, metadata] = await sequelize.query(`SELECT City , count(*) as count FROM Delevery_Detalis  ${query}  Group By City `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
@@ -170,11 +172,12 @@ const geDetalisPageNameAndCount = async (req, res) => {
 
     var query = "";
     if (type === 'موظف') {
-      query = "User_Name = N'" + fullName + "' AND statos like N'" + statos + "'";
+      // query = "WHERE User_Name = N'" + fullName + "' AND statos like N'" + statos + "'";
+      var query = "" ;
     } else if (type === 'مندوب') {
-      query = "taxiDriver = N'" + fullName + "' AND statos like N'" + statos + "'";
+      query = "WHERE taxiDriver = N'" + fullName + "' AND statos like N'" + statos + "'";
     } else if (type === 'بيج') {
-      query = "PageName = N'" + fullName + "' AND statos like N'" + statos + "'";
+      query = "WHERE PageName = N'" + fullName + "' AND statos like N'" + statos + "'";
     } else {
       return res.send({
         success: false,
@@ -182,7 +185,7 @@ const geDetalisPageNameAndCount = async (req, res) => {
       });
     }
 
-    const [results, metadata] = await sequelize.query(`SELECT PageName, COUNT(*) as count FROM Delevery_Detalis WHERE ${query} GROUP BY PageName`);
+    const [results, metadata] = await sequelize.query(`SELECT PageName, COUNT(*) as count FROM Delevery_Detalis  ${query} GROUP BY PageName`);
     const details = results;
     if (!results || results.length === 0) {
       return res.send({
@@ -218,18 +221,19 @@ const geDetalisTaxiDriverAndCount = async (req, res) => {
         }  
     var  query="";
     if (type === 'موظف') {
-       query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"'" ;
+      //  query = "WHERE User_Name = N'" + fullName +"' AND statos like N'" + statos +"'" ;
+      var query = "" ;
     } else if (type === 'مندوب') {
-       query = " taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
+       query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
     } else if (type === 'بيج') {
-       query = " PageName = N'" + fullName +"'AND statos like N'" + statos +"'" ;
+       query = "WHERE PageName = N'" + fullName +"'AND statos like N'" + statos +"'" ;
     }    else {
       return  res.send({
           success: false,
           message: "Access denied For This User .",
         });
        }
-      const [results, metadata] = await sequelize.query(`SELECT TaxiDriver , count(*) as count FROM Delevery_Detalis WHERE ${query}  Group By TaxiDriver `);
+      const [results, metadata] = await sequelize.query(`SELECT TaxiDriver , count(*) as count FROM Delevery_Detalis  ${query}  Group By TaxiDriver `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
@@ -274,7 +278,8 @@ const getDetalisbyCity = async (req, res) => {
                 }
     var  query="";
     if (type === 'موظف') {
-       query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
+      //  query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
+      var query = "" ;
     } else if (type === 'مندوب') {
        query = " taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
     } else if (type === 'بيج') {
@@ -285,7 +290,7 @@ const getDetalisbyCity = async (req, res) => {
           message: "Access denied For This User .",
         });
        }
-      const [results, metadata] = await sequelize.query(`SELECT ID,date,time,User_Name,Order_ID,City,Price2,Town,PageName,PagePrice2,TaxiDriver,TaxiPrice2,PayPrice,StatosPay,CheckReturn,Store_ID,Company_ID,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes,statos from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
+      const [results, metadata] = await sequelize.query(`SELECT ID,date,time,User_Name,Order_ID,City,Price2,Town,PageName,PagePrice2,TaxiDriver,TaxiPrice2,PayPrice,StatosPay,CheckReturn,Store_ID,Company_ID,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes,statos from Delevery_Detalis  ${query}  order by Order_ID ASC `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
@@ -331,18 +336,19 @@ const getDetalisbyPageName = async (req, res) => {
           }   
     var  query="";
     if (type === 'موظف') {
-       query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND PageName like N'"+ PageName +"%'" ;
+      //  query = "WHERE User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND PageName like N'"+ PageName +"%'" ;
+      var query = "" ;
     } else if (type === 'مندوب') {
-       query = " taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"' AND PageName like N'"+ PageName +"%'" ;
+       query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"' AND PageName like N'"+ PageName +"%'" ;
     } else if (type === 'بيج') {
-       query = " PageName = N'" + fullName +"'AND statos like N'" + statos +"'" ;
+       query = "WHERE PageName = N'" + fullName +"'AND statos like N'" + statos +"'" ;
     }    else {
       return  res.send({
           success: false,
           message: "Access denied For This User .",
         });
        }
-      const [results, metadata] = await sequelize.query(`SELECT ID,date,time,User_Name,Order_ID,City,Price2,Town,PageName,PagePrice2,TaxiDriver,TaxiPrice2,PayPrice,StatosPay,CheckReturn,Store_ID,Company_ID,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes,statos  from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
+      const [results, metadata] = await sequelize.query(`SELECT ID,date,time,User_Name,Order_ID,City,Price2,Town,PageName,PagePrice2,TaxiDriver,TaxiPrice2,PayPrice,StatosPay,CheckReturn,Store_ID,Company_ID,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes,statos  from Delevery_Detalis  ${query}  order by Order_ID ASC `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
@@ -389,18 +395,19 @@ const getDetalisbyTaxiDriver = async (req, res) => {
     
     var  query="";
     if (type === 'موظف') {
-       query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND TaxiDriver like N'"+ TaxiDriver +"'" ;
+      //  query = "WHERE User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND TaxiDriver like N'"+ TaxiDriver +"'" ;
+      var query = "" ;
     } else if (type === 'مندوب') {
-       query = " taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
+       query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
     } else if (type === 'بيج') {
-       query = " PageName = N'" + fullName +"'AND statos like N'" + statos +"' AND TaxiDriver like N'"+ TaxiDriver +"'" ;
+       query = "WHERE PageName = N'" + fullName +"'AND statos like N'" + statos +"' AND TaxiDriver like N'"+ TaxiDriver +"'" ;
     }    else {
       return res.send({
           success: false,
           message: "Access denied For This User .",
         });
        }
-      const [results, metadata] = await sequelize.query(`SELECT ID,date,time,User_Name,Order_ID,City,Price2,Town,PageName,PagePrice2,TaxiDriver,TaxiPrice2,PayPrice,StatosPay,CheckReturn,Store_ID,Company_ID,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes,statos  from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
+      const [results, metadata] = await sequelize.query(`SELECT ID,date,time,User_Name,Order_ID,City,Price2,Town,PageName,PagePrice2,TaxiDriver,TaxiPrice2,PayPrice,StatosPay,CheckReturn,Store_ID,Company_ID,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes,statos  from Delevery_Detalis  ${query}  order by Order_ID ASC `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
@@ -439,11 +446,15 @@ const getDetalisReport = async (req, res) => {
        var str=`SELECT [Order_ID],[Date],[PageName],[CustNumber],[CustName],[City],[Town],Price,DriverPrice,[PayPrice],[TaxiDriver],[CheckReturn],[QtyReturn],[Notes],Statos from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `;
 
     }     
-    else {
-      return res.send({
-          success: false,
-          message: "Access denied For This User .",
-        });
+    else if (type === 'موظف'){
+      // return res.send({
+      //     success: false,
+      //     message: "Access denied For This User .",
+      //   });
+      // query = "WHERE taxiDriver = N'" + fullName +"'" ;
+      query = "" ;
+      var str=`SELECT [Order_ID],[Date],[PageName],[CustNumber],[CustName],[City],[Town],Price,DriverPrice,[PayPrice],[TaxiDriver],[CheckReturn],[QtyReturn],[Notes],Statos from Delevery_Detalis ${query}  order by Order_ID ASC `;
+
        }
       const [results, metadata] = await sequelize.query(str);
       const details = results;
