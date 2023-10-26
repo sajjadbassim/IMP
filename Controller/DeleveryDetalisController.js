@@ -342,7 +342,7 @@ const getDetalisbyPageName = async (req, res) => {
           message: "Access denied For This User .",
         });
        }
-      const [results, metadata] = await sequelize.query(`SELECT ID,date,time,User_Name,Order_ID,City,Price2,Town,City+'-'+Town+'-'+Location As Address,PageName,PagePrice2,TaxiDriver,TaxiPrice2,,PayPrice,StatosPay,CheckReturn,Store_ID,Company_ID,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes,statos  from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
+      const [results, metadata] = await sequelize.query(`SELECT ID,date,time,User_Name,Order_ID,City,Price2,Town,City+'-'+Town+'-'+Location As Address,PageName,PagePrice2,TaxiDriver,TaxiPrice2,PayPrice,StatosPay,CheckReturn,Store_ID,Company_ID,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes,statos  from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
