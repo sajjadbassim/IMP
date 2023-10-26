@@ -285,7 +285,7 @@ const getDetalisbyCity = async (req, res) => {
           message: "Access denied For This User .",
         });
        }
-      const [results, metadata] = await sequelize.query(`SELECT ID,Order_ID,City+'-'+Town+'-'+Location As Address,PageName,TaxiDriver, Date,PayPrice,CustNumber from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
+      const [results, metadata] = await sequelize.query(`SELECT ID,Order_ID,City+'-'+Town+'-'+Location As Address,PageName,TaxiDriver, Date,PayPrice,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
@@ -331,7 +331,7 @@ const getDetalisbyPageName = async (req, res) => {
           }   
     var  query="";
     if (type === 'موظف') {
-       query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND PageName like N'"+ PageName +"'" ;
+       query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND PageName like N'"+ PageName +"%'" ;
     } else if (type === 'مندوب') {
        query = " taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"' AND PageName like N'"+ PageName +"%'" ;
     } else if (type === 'بيج') {
@@ -342,7 +342,7 @@ const getDetalisbyPageName = async (req, res) => {
           message: "Access denied For This User .",
         });
        }
-      const [results, metadata] = await sequelize.query(`SELECT ID,Order_ID,City+'-'+Town+'-'+Location As Address,PageName,TaxiDriver, Date,PayPrice,CustNumber from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
+      const [results, metadata] = await sequelize.query(`SELECT ID,Order_ID,City+'-'+Town+'-'+Location As Address,PageName,TaxiDriver, Date,PayPrice,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes  from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
@@ -400,7 +400,7 @@ const getDetalisbyTaxiDriver = async (req, res) => {
           message: "Access denied For This User .",
         });
        }
-      const [results, metadata] = await sequelize.query(`SELECT ID,Order_ID,City+'-'+Town+'-'+Location As Address,PageName,TaxiDriver, Date,PayPrice,CustNumber from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
+      const [results, metadata] = await sequelize.query(`SELECT ID,Order_ID,City+'-'+Town+'-'+Location As Address,PageName,TaxiDriver, Date,PayPrice,CustNumber,TaxiNotes,TaxiDriverPhone,PagePhone,PageNotes,CustName,TaxiNotes  from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
