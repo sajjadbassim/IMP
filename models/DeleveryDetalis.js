@@ -66,10 +66,10 @@ const DeliveryDetails = sequelize.define('Delevery_Detalis', {
     primaryKey: true,
     autoIncrement: true,
   },
-  Date: {
+  date: {
     type: DataTypes.DATE,
   },
-  Time: {
+  time: {
     type: DataTypes.TIME,
   },
   User_Name: {
@@ -104,9 +104,6 @@ const DeliveryDetails = sequelize.define('Delevery_Detalis', {
   },  
   PayPrice: {
     type: DataTypes.FLOAT,
-  },
-  Statos: {
-    type: DataTypes.STRING,
   },
   StatosPay: {
     type: DataTypes.STRING,
