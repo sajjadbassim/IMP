@@ -135,6 +135,9 @@ const DeliveryDetails = sequelize.define('Delevery_Detalis', {
   CustName: {
     type: DataTypes.STRING,
   },
+  statos: {
+    type: DataTypes.STRING,
+  },
 
 }, 
 {
