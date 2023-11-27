@@ -13,6 +13,10 @@ router.get('/DetalisbyCity',isAuthenticatedUser, DeleveryDetalisController.getDe
 router.get('/DetalisbyPageName',isAuthenticatedUser, DeleveryDetalisController.getDetalisbyPageName);
 router.get('/DetalisbyTaxiDriver',isAuthenticatedUser, DeleveryDetalisController.getDetalisbyTaxiDriver);
 router.get('/DetalisReport',isAuthenticatedUser, DeleveryDetalisController.getDetalisReport);
+
+router.get('/getDetalis',isAuthenticatedUser, DeleveryDetalisController.getDetalisbyStatus);
+router.get('/getStatusAndOrderID',isAuthenticatedUser, DeleveryDetalisController.getStatusAndOrderID);
+
 router.get('/searchByOrderID_Phone',isAuthenticatedUser, DeleveryDetalisController.searchByOrderID_Phone);
 
 router.put('/DeleveryDone',isAuthenticatedUser, DeleveryDetalisController.DeliveryDone);

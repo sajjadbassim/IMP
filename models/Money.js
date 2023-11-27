@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/database');
+const sequelizePaginate = require('sequelize-paginate');
 
 const Money = sequelize.define('Money', {
   ID: {
@@ -36,5 +37,5 @@ const Money = sequelize.define('Money', {
   timestamps: false, // If you don't have timestamp columns in your table
 });
 
-
+sequelizePaginate.paginate(Money);
 module.exports = Money;

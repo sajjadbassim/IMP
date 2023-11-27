@@ -9,5 +9,4 @@ router.get('/',isAuthenticatedUser, MoneyController.getAllMoney);
 router.get('/moneybyID',isAuthenticatedUser, MoneyController.getlMoneyById);
 router.get('/MoneyReport',isAuthenticatedUser, MoneyController.getMoneyReport);
 
-
 module.exports = router;

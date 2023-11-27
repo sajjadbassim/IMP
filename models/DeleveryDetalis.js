@@ -59,6 +59,7 @@
 // });
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/database');
+const sequelizePaginate = require('sequelize-paginate');
 
 const DeliveryDetails = sequelize.define('Delevery_Detalis', {
   ID: {
@@ -66,7 +67,7 @@ const DeliveryDetails = sequelize.define('Delevery_Detalis', {
     primaryKey: true,
     autoIncrement: true,
   },
-  date: {
+ date: {
     type: DataTypes.DATE,
   },
   time: {
@@ -108,6 +109,7 @@ const DeliveryDetails = sequelize.define('Delevery_Detalis', {
   StatosPay: {
     type: DataTypes.STRING,
   },
+
   CheckReturn: {
     type: DataTypes.STRING,
   },
@@ -117,18 +119,18 @@ const DeliveryDetails = sequelize.define('Delevery_Detalis', {
   Company_ID: {
     type: DataTypes.INTEGER,
   },
-  TaxiNotes: {
+  Notes: {
     type: DataTypes.STRING,
   },
-  TaxiDriverPhone: {
-    type: DataTypes.STRING,
+  DriverPrice: {
+    type: DataTypes.INTEGER,
   },
-  PagePhone: {
-    type: DataTypes.STRING,
-  },
-  PageNotes: {
-    type: DataTypes.STRING,
-  },
+  // PagePhone: {
+  //   type: DataTypes.STRING,
+  // },
+  // PageNotes: {
+  //   type: DataTypes.STRING,
+  // },
   CustName: {
     type: DataTypes.STRING,
   },
@@ -140,6 +142,6 @@ const DeliveryDetails = sequelize.define('Delevery_Detalis', {
 {
   timestamps: false, // Disable timestamps
 });
-
+sequelizePaginate.paginate(DeliveryDetails);
 module.exports = DeliveryDetails;
 

@@ -68,11 +68,11 @@ const getDetalisStatosAndCount = async (req, res) => {
     const type = req.user.Type;
     var  query="";
     if (type === 'موظف') {
-    // var query = "WHERE User_Name = N'" + fullName +"'" ;
+    var query = "WHERE User_Name = N'" + fullName +"'" ;
     var query = "" ;
 
     } else if (type === 'مندوب') {
-      var query = "WHERE taxiDriver = N'" + fullName +"' AND StatosPay!=N'تم التسديد' AND Statos!=N'راجع إلى العميل' and Statos!=N'راجع الى المخزن'" ;
+      var query = "WHERE taxiDriver = N'" + fullName +"' AND StatosPayTaxy!=N'تم التسديد' AND Statos!=N'راجع إلى العميل' and Statos!=N'راجع الى المخزن'" ;
     } else if (type === 'بيج') {
       var query = "WHERE PageName = N'" + fullName +"'" ;
     }  else {
@@ -88,11 +88,14 @@ const getDetalisStatosAndCount = async (req, res) => {
           details: "",
         });
       }
+      
     res.send({
         success: true,
         message: `Delivery details info statos and count For ${type}`,
         details: details,
       });
+      console.log("🚀 ~ file: DeleveryDetalisController.js:86 ~ getDetalisStatosAndCount ~ details:", details)
+
     }
   catch (err) {
     // ! Error Logger send message: error and send User id for join
@@ -121,7 +124,7 @@ const geDetalisTown = async (req, res) => {
     var  query="";
     if (type === 'موظف') {
       //  query = "WHERE User_Name = N'" + fullName +"' AND statos like N'" + statos +"'" ;
-      var query = "" ;
+      var query = "WHERE statos like N'" + statos +"'" ;
     } else if (type === 'مندوب') {
        query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
     } else if (type === 'بيج') {
@@ -173,7 +176,7 @@ const geDetalisPageNameAndCount = async (req, res) => {
     var query = "";
     if (type === 'موظف') {
       // query = "WHERE User_Name = N'" + fullName + "' AND statos like N'" + statos + "'";
-      var query = "" ;
+      var query = "WHERE statos like N'" + statos + "'" ;
     } else if (type === 'مندوب') {
       query = "WHERE taxiDriver = N'" + fullName + "' AND statos like N'" + statos + "'";
     } else if (type === 'بيج') {
@@ -222,7 +225,7 @@ const geDetalisTaxiDriverAndCount = async (req, res) => {
     var  query="";
     if (type === 'موظف') {
       //  query = "WHERE User_Name = N'" + fullName +"' AND statos like N'" + statos +"'" ;
-      var query = "" ;
+      var query = "WHERE statos like N'" + statos + "'" ;
     } else if (type === 'مندوب') {
        query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
     } else if (type === 'بيج') {
@@ -279,11 +282,11 @@ const getDetalisbyCity = async (req, res) => {
     var  query="";
     if (type === 'موظف') {
       //  query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
-      var query = "" ;
+      var query = "WHERE statos like N'" + statos +"' AND city like N'" + city + "'" ;
     } else if (type === 'مندوب') {
-       query = " taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
+       query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
     } else if (type === 'بيج') {
-       query = " PageName = N'" + fullName +"'AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
+       query = "WHERE PageName = N'" + fullName +"'AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
     }    else {
       return res.send({
           success: false,
@@ -337,7 +340,7 @@ const getDetalisbyPageName = async (req, res) => {
     var  query="";
     if (type === 'موظف') {
       //  query = "WHERE User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND PageName like N'"+ PageName +"%'" ;
-      var query = "" ;
+     query = "WHERE statos like N'" + statos +"' AND PageName like N'"+ PageName +"%'" ;
     } else if (type === 'مندوب') {
        query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"' AND PageName like N'"+ PageName +"%'" ;
     } else if (type === 'بيج') {
@@ -396,7 +399,7 @@ const getDetalisbyTaxiDriver = async (req, res) => {
     var  query="";
     if (type === 'موظف') {
       //  query = "WHERE User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND TaxiDriver like N'"+ TaxiDriver +"'" ;
-      var query = "" ;
+      var query = "WHERE statos like N'" + statos +"' AND TaxiDriver like N'"+ TaxiDriver +"'" ;
     } else if (type === 'مندوب') {
        query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
     } else if (type === 'بيج') {
@@ -434,36 +437,291 @@ const getDetalisReport = async (req, res) => {
   try {
     const fullName = req.user.FulName;
     const type = req.user.Type;
+    const status = req.query.statos;
 
-    var  query="";
-    var str;
+    if (typeof status === 'undefined' || status === '') {
+      return res.send({
+        success: false,
+        message: "status is 'undefined' or null",
+      });
+    }
+    const options = {
+      page: req.query.page ? parseInt(req.query.page) : 1, // Default 1
+      paginate: req.query.paginate ? parseInt(req.query.paginate) : 1, // Default 25
+    };
+    let whereClause = {};
+
     if (type === 'بيج') {
-      query = " PageName = N'" + fullName +"'" ;
-      var str=`SELECT [Order_ID],[Date] ,[PageName],[CustNumber],[CustName],[City]+'-'+[Town] as Address,Price,PagePrice,PagePrice2,TaxiPrice,TaxiPrice2,[PayPrice],[TaxiDriver],[CheckReturn],[QtyReturn],[Notes] from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `;
-   }
-    else if (type === 'مندوب') {
-       query = " taxiDriver = N'" + fullName +"'" ;
-       var str=`SELECT [Order_ID],[Date],[PageName],[CustNumber],[CustName],[City],[Town],Price,DriverPrice,[PayPrice],[TaxiDriver],[CheckReturn],[QtyReturn],[Notes],Statos from Delevery_Detalis WHERE ${query}  order by Order_ID ASC `;
+      
+      whereClause = {
+        PageName: fullName,
+        statos: { [Op.like]: status },
+      };
+    } else if (type === 'مندوب') {
+    
+      whereClause = {
+        taxiDriver: fullName,
+        statos: { [Op.like]: status },
+      };
+    } else if (type === 'موظف') {
+      
+      whereClause = {
+        statos: { [Op.like]: status },
+      };
+    }
 
-    }     
-    else if (type === 'موظف'){
-      // return res.send({
-      //     success: false,
-      //     message: "Access denied For This User .",
-      //   });
-      // query = "WHERE taxiDriver = N'" + fullName +"'" ;
-      query = "" ;
-      var str=`SELECT [Order_ID],[Date],[PageName],[CustNumber],[CustName],[City],[Town],Price,DriverPrice,[PayPrice],[TaxiDriver],[CheckReturn],[QtyReturn],[Notes],Statos from Delevery_Detalis ${query}  order by Order_ID ASC `;
+    const details = await DeleveryDetalis.paginate({
+      ...options,
+      where: whereClause,
+      order: [['Order_ID', 'ASC']],
+      attributes: [
+        'Order_ID',
+        'Date',
+        'PageName',
+        'CustNumber',
+        'CustName',
+        'City',
+        'Town',
+        'Price',
+        'DriverPrice',
+        'PayPrice',
+        'TaxiDriver',
+        'CheckReturn',
+        'QtyReturn',
+        'Notes',
+        'Statos', // Include this if it's part of your table
+      ],
+    });
 
+    if (!details || details.length === 0) {
+      return res.send({
+        details: "",
+      });
+    }
+    const details2 = await DeleveryDetalis.findAll({
+    
+      where: whereClause,
+
+      order: [['Order_ID', 'ASC']],
+     
+    });
+          let totalPayPrice = 0;
+      let totalTaxiPrice = 0;
+      let totalPagePrice2 =0;
+      let totalDriverPrice =0;
+
+        details2.forEach(item => {
+        totalPayPrice += item.PayPrice;
+        totalTaxiPrice += item.TaxiPrice2;
+        totalPagePrice2+=item.PagePrice2;
+        totalDriverPrice+=item.DriverPrice;
+        
+      }); 
+    res.send({
+      success: true,
+      message: `Delivery details info Town and count For ${type}`,
+      details,
+      totalPayPrice,
+      totalTaxiPrice,
+      totalPagePrice2,
+      totalDriverPrice,
+    });
+  } catch (err) {
+    // Log the error and send an error message to the client
+    console.error(err);
+    res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+// const getDetalisReportbyDate = async (req, res) => {
+//   try {
+//     const fullName = req.user.FulName;
+//     const type = req.user.Type;
+//     const status = req.query.statos;
+//     const startDate = req.query.startDate;
+//     const endDate = req.query.endDate;
+
+//     if (typeof status === 'undefined' || status === '') {
+//       return res.send({
+//         success: false,
+//         message: "status is 'undefined' or null",
+//       });
+//     }
+
+//     const options = {
+//       page: req.query.page ? parseInt(req.query.page) : 1, // Default 1
+//       paginate: req.query.paginate ? parseInt(req.query.paginate) : 1, // Default 25
+//     };
+
+//     let whereClause = {
+//       statos: { [Op.like]: status },
+//     };
+//     if (startDate && endDate) {
+//       whereClause.Date = {
+//         [Op.between]: [startDate, endDate],
+//       };
+//     }
+//     if (type === 'بيج') {
+//       whereClause.PageName = fullName;
+//     } else if (type === 'مندوب') {
+//       whereClause.taxiDriver = fullName;
+//     }
+
+//     const details = await DeleveryDetalis.paginate({
+//       ...options,
+//       where: whereClause,
+
+//       order: [['Order_ID', 'ASC']],
+//       attributes: [
+//         'Order_ID',
+//         'date',
+//         'PageName',
+//         'CustNumber',
+//         'CustName',
+//         'City',
+//         'Town',
+//         'Price',
+//         'PayPrice',//
+//         'TaxiDriver',
+//         'TaxiPrice2',//
+//         'CheckReturn',
+//         'QtyReturn',
+//         'Notes',
+//         'Statos',
+//         'DriverPrice',
+//       ],
+//     });
+  
+
+//     const details2 = await DeleveryDetalis.findAll({
+    
+//       where: whereClause,
+
+//       order: [['Order_ID', 'ASC']],
+     
+//     });
+//     if (!details || details.length === 0) {
+//       return res.send({
+//         details: "",
+//       });
+//     }
+//       let totalPayPrice = 0;
+//       let totalTaxiPrice = 0;
+//       let totalPagePrice2 =0;
+//       let totalDriverPrice =0;
+
+//         details2.forEach(item => {
+//         totalPayPrice += item.PayPrice;
+//         totalTaxiPrice += item.TaxiPrice2;
+//         totalPagePrice2+=item.PagePrice2;
+//         totalDriverPrice+=item.DriverPrice;
+        
+//       }); 
+//     res.send({
+//       success: true,
+//       message: `Delivery details info Town and count For ${type}`,
+//       details,
+//       totalPayPrice,
+//       totalTaxiPrice,
+//       totalPagePrice2,
+//       totalDriverPrice,
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.send({
+//       success: false,
+//       message: err.message,
+//     });
+//    }
+// };
+
+
+// const getDetalisbyStatus = async (req, res) => {
+//   try {
+//     const fullName = req.user.FulName;
+//     const type = req.user.Type;
+//     const statos = req.query.statos ;
+//         // Check if statos is undefined or null
+//         if (typeof statos === 'undefined' || statos === '') {
+//           return res.send({
+//             success: false,
+//             message: "statos is 'undefined' or null",
+//           });
+//         }
+//     var  query="";
+//     if (type === 'موظف') {
+//       //  query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
+//       var query = "WHERE statos like N'" + statos +"'" ;
+//     } else if (type === 'مندوب') {
+//        query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"' AND StatosPayTaxy!=N'تم التسديد' " ;
+//     } else if (type === 'بيج') {
+//        query = "WHERE PageName = N'" + fullName +"'AND statos like N'" + statos +"' AND StatosPayTaxy!=N'تم التسديد' " ;
+//     }    else {
+//       return res.send({
+//           success: false,
+//           message: "Access denied For This User .",
+//         });
+//        }
+//       const [results, metadata] = await sequelize.query(`SELECT ID,date,time,User_Name,Order_ID,City,Price2,Town,PageName,PagePrice2,TaxiDriver,TaxiPrice2,PayPrice,StatosPay,CheckReturn,Store_ID,Company_ID,CustNumber,CustName,statos from Delevery_Detalis  ${query}  order by Order_ID ASC `);
+//       const details = results;
+//       if (!results || results.length === 0) {
+//         return res.send({
+//           details: "",
+//         });
+//       }
+//     res.send({
+//         success: true,
+//         message: `Delivery details info Town and count For ${type}`,
+//         details: details,
+//       });
+ 
+//   } 
+//   catch (err) {
+//     // ! Error Logger send message: error and send User id for join
+//     res.send({
+//       success: false,
+//       message: err.message,
+//     });
+//   }
+// };
+
+
+const getStatusAndOrderID = async (req, res) => {
+  try {
+    const fullName = req.user.FulName;
+    const type = req.user.Type;
+    const statos = req.query.statos ;
+        // Check if statos is undefined or null
+        if (typeof statos === 'undefined' || statos === '') {
+          return res.send({
+            success: false,
+            message: "statos is 'undefined' or null",
+          });
+        }
+    var  query="";
+    if (type === 'موظف') {
+      //  query = " User_Name = N'" + fullName +"' AND statos like N'" + statos +"' AND city like N'" + city + "'" ;
+      var query = "WHERE statos like N'" + statos +"'" ;
+    } else if (type === 'مندوب') {
+       query = "WHERE taxiDriver = N'" + fullName +"'AND statos like N'" + statos +"'" ;
+    } else if (type === 'بيج') {
+       query = "WHERE PageName = N'" + fullName +"'AND statos like N'" + statos +"'" ;
+    }    else {
+      return res.send({
+          success: false,
+          message: "Access denied For This User .",
+        });
        }
-      const [results, metadata] = await sequelize.query(str);
+      const [results, metadata] = await sequelize.query(`SELECT ID,Order_ID,statos from Delevery_Detalis  ${query}  order by Order_ID ASC `);
       const details = results;
       if (!results || results.length === 0) {
         return res.send({
           details: "",
         });
       }
-  
     res.send({
         success: true,
         message: `Delivery details info Town and count For ${type}`,
@@ -479,7 +737,6 @@ const getDetalisReport = async (req, res) => {
     });
   }
 };
-
 const searchByOrderID_Phone = async (req, res) => {
   
   try {
@@ -497,7 +754,7 @@ const searchByOrderID_Phone = async (req, res) => {
       query.taxiDriver = fullName;
     }
     else if (type === 'موظف') {
-      query.User_Name = fullName;
+      // query.User_Name = fullName;
     }
      else {
       return res.send({
@@ -596,7 +853,82 @@ const searchByOrderID_Phone = async (req, res) => {
   //   });
   //   }
   // };
+  const getDetalisbyStatus = async (req, res) => {
+    try {
+      let details
+      const fullName = req.user.FulName;
+      const type = req.user.Type;
+      const statos = req.query.statos;        
+      
+      const options = {
+        page: req.query.page ? parseInt(req.query.page) : 1, // Default 1
+        paginate: req.query.paginate ? parseInt(req.query.paginate) : 1, // Default 25
+      };
+   
   
+      // Check if statos is undefined or null
+      if (typeof statos === 'undefined' || statos === '') {
+        return res.send({
+          success: false,
+          message: "statos is 'undefined' or null",
+        });
+      }
+ 
+      if (type === 'موظف') {
+         details = await DeleveryDetalis.paginate({
+          ...options,
+          where: {
+            statos: { [Op.like]: statos },
+          },
+          order: [['Order_ID', 'ASC']],
+  
+        });
+      } else if (type === 'مندوب') {
+         details = await DeleveryDetalis.paginate({
+          ...options,
+          where: {
+            taxiDriver: fullName,
+            statos: { [Op.like]: statos },
+          },
+          order: [['Order_ID', 'ASC']],
+        });
+      } else if (type === 'بيج') {
+        
+         details = await DeleveryDetalis.paginate({
+          ...options,
+          where: {
+            PageName: fullName,
+            statos: { [Op.like]: statos },
+          },
+          order: [['Order_ID', 'ASC']],
+        });
+      
+      } else {
+        return res.send({
+          success: false,
+          message: "Access denied For This User.",
+        });
+      }
+  
+      if (!details || details.length === 0) {
+        return res.send({
+          details: "",
+        });
+      }
+  
+      res.send({
+        success: true,
+        message: `Delivery details info Town and count For ${type}`,
+        details: details,
+      });
+    } catch (err) {
+      // Error Logger: send message and user id for debugging
+      res.send({
+        success: false,
+        message: err.message,
+      });
+    }
+  };
   const DeliveryDone = async (req, res) => {
     try {
       const id = req.body.id;
@@ -608,17 +940,18 @@ const searchByOrderID_Phone = async (req, res) => {
           message: "Details not found!",
         });
       }
-      const statos = deliveryDetails.Statos;
-      if (statos === "قيد المعالجة") {
+
+      const statos = deliveryDetails.statos;
+     
+      if (statos === "قيد المعالجة" || statos === "راجع من قبل المندوب") {
         const updatedData = {
-          Statos: 'تم التوصيل من قبل المندوب',
+          statos: 'تم التوصيل من قبل المندوب',
           TaxiNotes: '',
         };
-
+       
         await DeleveryDetalis.update(updatedData, {
           where: { ID: id },
         });
-  
         return res.send({
           success: true,
           message: "Details updated successfully!",
@@ -693,17 +1026,34 @@ const searchByOrderID_Phone = async (req, res) => {
           message: "Details not found!",
         });
       }
-      const statos = deliveryDetails.Statos;
-      if (statos === "قيد المعالجة") {
+      const statos = deliveryDetails.statos;
+      console.log(deliveryDetails);
+      var status_update = "تم التوصيل من قبل المندوب"
+      var updatePayPrice = deliveryDetails.PayPrice;
+      var Notes;
+      var PagePrice2;
+      if (statos === "قيد المعالجة"|| statos === "راجع من قبل المندوب") {
    
         const taxiPrice2 = deliveryDetails.TaxiPrice2; // Retrieve the current TaxiPrice2 value
-        const updatedPagePrice2 = taxiPrice2 - payprice ; // Calculate the updated PagePrice2 value
-    
-        const updatedData = {
-          Statos: 'تم التوصيل من قبل المندوب',
-          PayPrice: payprice,
-          TaxiNotes: 'تغيير + توصيل',
-          PagePrice2: updatedPagePrice2, // Add the updated PagePrice2 value
+        const updatedPagePrice2 = payprice-taxiPrice2 ; // Calculate the updated PagePrice2 value
+          if(payprice === updatePayPrice){
+             console.log("===========================================");
+            updatePayPrice = deliveryDetails.PayPrice;
+            PagePrice2=deliveryDetails.PagePrice2
+            Notes='';
+          }else{
+            console.log("**********************************************");
+            updatePayPrice = payprice;
+            Notes='تغيير + توصيل';
+            PagePrice2 =  updatedPagePrice2;
+          
+          }
+
+          const updatedData = {
+          statos: status_update,
+          PayPrice: updatePayPrice,
+          Notes: Notes,
+          PagePrice2: PagePrice2, // Add the updated PagePrice2 value
         };    
         await DeleveryDetalis.update(updatedData, {
           where: { ID: id },
@@ -738,12 +1088,12 @@ const searchByOrderID_Phone = async (req, res) => {
         message: "Details not found!",
       });
     }
-    const statos = deliveryDetails.Statos;
-    if (statos === "قيد المعالجة") {
+    const statos = deliveryDetails.statos;
+    if (statos === "قيد المعالجة" || statos === "راجع من قبل المندوب") {
       
       const updatedData = {
-        Statos: 'راجع من قبل المندوب',
-        TaxiNotes: '',
+        statos: 'راجع من قبل المندوب',
+        Notes: '',
         };
         const details = await DeleveryDetalis.update(updatedData, {
           where: { ID: id },
@@ -778,18 +1128,19 @@ const searchByOrderID_Phone = async (req, res) => {
           message: "Details not found!",
         });
       }
-      const statos = deliveryDetails.Statos;
-      if (statos ===  "قيد المعالجة") {  
+      const statos = deliveryDetails.statos;
+      if (statos ===  "قيد المعالجة" || statos === "راجع من قبل المندوب")  {  
         const taxiPrice2 = deliveryDetails.TaxiPrice2; // Retrieve the current TaxiPrice2 value
-        const updatedPagePrice2 = taxiPrice2 - PayPrice ; // Calculate the updated PagePrice2 value
-    
+        const updatedPagePrice2 =   PayPrice-taxiPrice2 ; // Calculate the updated PagePrice2 value
+
         const updatedData = {
-        Statos: 'راجع من قبل المندوب',
+        statos: 'راجع من قبل المندوب',
         CheckReturn: 'راجع جزئي',
         PayPrice: PayPrice,
         PagePrice2: updatedPagePrice2,
-        TaxiNotes: '',
+        Notes: '',
         };
+        
         await DeleveryDetalis.update(updatedData, {
           where: { ID: id },
         });
@@ -813,6 +1164,7 @@ const searchByOrderID_Phone = async (req, res) => {
     });
     }
   };
+ 
   // const ChangePriceAndDelivery = async (req, res) => {
   //   try {
   //     //const id = req.body.id;
@@ -871,6 +1223,9 @@ module.exports = {
     DeliveryDoneWithChange,
     getDetalisReport,
     searchByOrderID_Phone,
+    getDetalisbyStatus,
+    getStatusAndOrderID,
+    // getDetalisReportbyDate,
 
   };
 
